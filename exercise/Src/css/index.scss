@@ -1,0 +1,31 @@
+html{position: relative;}
+body{position: relative;width: 100%;background: #fff;}
+body,div,p,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,p,table,input{margin:0;padding:0;font-weight: normal;}
+table{width:auto;border-collapse: collapse;border-spacing: 0;}
+li{list-style: none;}
+em,i{font-style: normal;}
+a{outline: none;text-decoration: none;}
+a:hover{outline: none;text-decoration: underline;}
+img{border: 0;}
+pre{margin: 0;padding: 0;white-space: pre-wrap;}
+.hidden{display: none;}
+.hide_txt{text-indent: -9999em;font-size: 0;line-height: 0;}
+.clearfix:after{display:block;content:"";visibility:hidden;clear:both;height:0;}
+.clearfix{zoom:1;}
+
+body,input,textarea,pre{font:12px/1.5 tahoma,arial,\5FAE\8F6F\96C5\9ED1,sans-serif;font-family: "Microsoft YaHei","微软雅黑",tahoma,arial,simsun,"宋体";}
+
+header{
+    padding: 50px
+}
+
+header h1{ 
+    text-align: center;
+}
+
+.main .left { a{ line-height: 1 } }
+.main .right { margin-left: 50%; }
+
+input {
+    width: 200px;
+}
