@@ -50,25 +50,32 @@ $.each(QUESTION, (index, question_element) => {
                                 输入: ${ Utils.html_encode( test_demo_element ) },
                                 输出: ${ question_element.suggest.test( test_demo_element )  }
                             </li>`
-                })
+                }).join(' ')
             }
         </ul>
         <h4>测试结果</h4>
-        <ul class="j_test_answer_ul" data-test-demo="${Utils.string_encode( question_element.test_demo )}">
+        <ul class="j_test_answer_ul" 
+            data-test-demo="${Utils.string_encode( question_element.test_demo )}"
+            data-suggest=${ Utils.string_encode( question_element.suggest ) }
+        >
            
         </ul>
         <input  type="text" class="j_test_answer_input" data-id="0">
         <button class="j_test_answer_button">开炮</button>
+        <p class="j_answer_p" style="color: red; display: none">恭喜答对啦! 推荐答案是: ${ Utils.html_encode( question_element.suggest ) }</p>
     `
+    console.log(question_element.suggest)
 })
 
 $('.j_question_ul').html( question_ul_string )
 
 $('body').on('click', '.j_test_answer_button', function(event){
-    console.log(Utils.html_decode( $(this).siblings('.j_test_answer_ul').attr('data-test-demo') ))
+   
     var user_regex_test_answer = Utils.get_regex ( $(this).siblings('.j_test_answer_input').val().trim() ),
-        test_demo =   Utils.string_decode( $(this).siblings('.j_test_answer_ul').attr('data-test-demo') ) 
-    
+        test_demo =   Utils.string_decode( $(this).siblings('.j_test_answer_ul').attr('data-test-demo') ),
+        suggest = Utils.string_decode( $(this).siblings('.j_test_answer_ul').attr('data-suggest') ),
+        user_regex_is_right
+
     if ( ! (user_regex_test_answer instanceof RegExp)) {
         alert('正则表达式错误')
         return
@@ -83,7 +90,13 @@ $('body').on('click', '.j_test_answer_button', function(event){
                     })
         )
     
-   '<HR SIZE=14>'.replace(user_regex_test_answer, function(){
-        console.log(arguments)
-    }) 
+    user_regex_is_right = _.every( test_demo, test_demo_element => {
+        return suggest.test( test_demo_element ) === user_regex_test_answer.test( test_demo_element ) 
+    })
+
+    if ( user_regex_is_right ) {
+        $(this).siblings('.j_answer_p').show()
+    }
+    
+    
 })
