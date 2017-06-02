@@ -1,5 +1,5 @@
 {
-  "name": "__project_name__",
+  "name": "k-regex",
   "version": "0.0.1",
   "private": true,
   "description": "",
@@ -11,6 +11,11 @@
     "build:babel": "NODE_ENV=release babel ./Src --out-dir ./Build",
     "build": "npm run build:babel && npm run build:copy-files && npm run build:es",
     "production": "NODE_ENV=production webpack",
+    "dev": "webpack -w",
+    "d": "npm run dev",
+    "p": "npm run production",
+    "server": "node serve.js",
+    "s": "npm run server",
     "official": "npm run build && cd ./Build && npm publish && cd ../ && webpack -p  && git add ./ && git commit -m 'publish' && git push "
   },
   "dependencies": {
@@ -48,6 +53,7 @@
     "glob": "^7.0.0",
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.9.0",
+    "k-qiniu": "1.0.4",
     "node-sass": "4.5.2",
     "sass": "0.5.0",
     "sass-loader": "6.0.3",

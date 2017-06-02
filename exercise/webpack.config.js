@@ -6,8 +6,9 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var webpack_config_data = require('./Create_Webpack_Config_Data.js');
-
-
+var env = require('./.env.js')
+var _package = require('./package.json');
+var QiniuPlugin = require('k-qiniu');
 console.log( (new webpack_config_data()).get_entry_html('./Src') )
 
 const debug = process.env.NODE_ENV !== 'production';
@@ -19,14 +20,24 @@ entries = (new webpack_config_data()).get_entry_js('./Src');
 entries['lib'] =['jquery','underscore','k-logging','k-report']; //说明lib模块
 
 //var entries = getEntry('src/js/**/*.js');
-entries[ 'index' ] = ['webpack-hot-middleware/client', entries[ 'index' ]] 
+
+var __DEV__ = process.env.NODE_ENV !== 'production',
+    __SERVER__ = process.env.NODE_ENV === 'SERVER',
+    public_path
+
+if ( !__DEV__  ) {
+  public_path =   'http://publish.404mzk.com/static/' + _package.name + "/" + _package.version +"/";
+}else{
+  public_path = null
+}
+
 console.log( entries);
 var chunks = Object.keys(entries);
 var config = {
   entry: entries,
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: '/',
+    publicPath: public_path,
     filename: 'js/[name].js',
     chunkFilename: 'js/[id].chunk.js?[chunkhash]'
   },
@@ -80,7 +91,7 @@ var config = {
       //minChunks: chunks.length // 提取所有entry共同依赖的模块
     }),
     new ExtractTextPlugin('css/[name].css'), //单独使用link标签加载css并设置路径，相对于output配置中的publickPath
-   debug ? function() {} : new UglifyJsPlugin({ //压缩代码
+   __DEV__ ? function() {} : new UglifyJsPlugin({ //压缩代码
       compress: {
         warnings: false,
         screw_ie8: false
@@ -91,14 +102,30 @@ var config = {
       //except: ['$super', '$', 'exports', 'require'] //排除关键字
     }),
      new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    
+    new webpack.NoErrorsPlugin(),
+    __SERVER__ ? new webpack.HotModuleReplacementPlugin() : () => {},
+    new webpack.NoErrorsPlugin(),
+    __DEV__ ? function(){} : new QiniuPlugin({
+
+      // 七牛云的两对密匙 Access Key & Secret Key
+      accessKey: env.qiniu_access_key,
+    
+      secretKey: env.qiniu_secret_key,
+    
+      // 七牛云存储空间名称
+      bucket: 'publish',
+      
+      // 上传到七牛后保存的文件名
+      path: 'static/[name]/[version]/[asset]'
+
+    })
   ]
 };
 
  (new webpack_config_data()).get_entry_html('./Src').forEach(element => {
     config.plugins.push(new HtmlWebpackPlugin(element));
  })
-
+console.log( config);
  module.exports = config
  

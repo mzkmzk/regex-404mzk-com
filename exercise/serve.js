@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var webpackConfig = require('./webpack.config');
 var compiler = webpack(webpackConfig);
 var http = require('http');
-
+webpackConfig.entry[ 'index' ] =  ['webpack-hot-middleware/client',webpackConfig.entry[ 'index' ]] 
 var express = require('express');
  var app = express();
 app.use(require("webpack-dev-middleware")(compiler, {
