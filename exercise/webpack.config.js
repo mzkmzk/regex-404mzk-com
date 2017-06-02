@@ -58,8 +58,8 @@ var config = {
        {
         test: /\.scss$/,
         //loaders: ['style','css']
-        loaders: ['style','css','sass']
-        //loader: ExtractTextPlugin.extract('style', 'css','sass')
+        //loaders: ['style','css','sass']
+        loader: ExtractTextPlugin.extract('style', 'css!sass')
       },{
         test: /\.css$/,
         //loaders: ['style','css']
